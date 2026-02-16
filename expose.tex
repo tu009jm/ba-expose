@@ -1,0 +1,92 @@
+\documentclass[
+  ngerman,
+  symmetric,
+  cdfont=on,
+  numbers=noenddot
+]{tudscrreprt}
+
+% Optional: Serif font like in your template
+\usepackage[bitstream-charter]{mathdesign}
+\addtokomafont{disposition}{\rmfamily}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+% Briefkopf / Titelseite (aus deiner Vorlage)
+\pagenumbering{Roman}
+
+%\faculty{Fakultät Informatik}
+\faculty{Faculty of Computer Science}
+\department{}
+%\institute{Institut für Systemarchitektur}
+\institute{Institute of Systems Architecture}
+%\chair{Lehrstuhl Distributed and Networked Systems}
+\chair{Chair of Distributed and Networked Systems}
+
+\title{%
+  Exposé: Entwicklung von Ansätzen zur Installation und dem Betrieb von Kubernetes-Clustern auf Rechnerknoten im Weltall
+}
+
+% Fix für englische Lokalisierung von Abschlussarbeiten (optional; nur nötig, wenn du english als babel nutzt)
+\makeatletter
+ \tud@localization@english{\bachelorthesisname}{Bachelor's Thesis}
+\makeatother
+\date{}
+\author{Jannes Mueller}
+
+\maketitle
+\newpage
+
+% Ab hier dein Exposé-Inhalt
+\pagenumbering{arabic}
+
+\section{Motivation}
+Eine der wesentlichen Unterschiede zwischen der Entwicklung und den Betrieb von Satelliten und 
+die Entwicklung und der Betrieb von Diensten im IT Umfeld ist die Möglichkeit über die gesamte Lebensdauer
+hinweg nach Bedarf Anpassungen vorzunehmen. Die Trends der Entwicklungen von IT-Diensten der letzten Jahre 
+zeigen die Vorteile kleine Anpassungen und Korrekturen im Code schnell deployen zu können. So können 
+einfach zuvor gemachte Fehler ausgebessert und etwaige Änderungen in den Produktanforderungen auch 
+nachträglich noch umgesetzt werden. Auf diese Weise kann sich der Lebenszyklus einer Anwendung deutlich 
+verlängern. Dies ist sowohl vorteilhaft für den Kunden als auch für den Entwickler. 
+Von solch einer Flexibilität und Effizienz kann bei Satelliten bislang nur geträumt werden. Hierbei handelt
+es sich in der Regel um Maschinen, bei denen die Entwicklung von Software und Hardware zugleich erfolgt 
+und die nach ihrem Deployment im All nur sehr eingeschränkt geupdatet werden können. 
+Die Einführung von zusätzlicher oder erweiterter Funktionalität zu einem späteren Zeitpunkt ist somit 
+nicht gegeben. Dies sorgt für eine verminderten Lebenszyklus der Maschinen, da aktualisierte 
+Anforderungen nicht mehr mit bereits vorhandenen Maschinen umgesetzt werden können. 
+Um diese eingeschränkte Funktionalität zu erweitern und die Wiederverwendbarkeit zu erhöhen ist es 
+zwingend notwendig die Flexibilität der softwareseitigen Applikationen auf Satelliten zu erhöhen. 
+Hierbei genügt ein einfacher Blick auf die Entwicklung von Software für terristische Anwendungen um 
+Verbesserungen ausmachen zu können. 
+Im Cloud-Computing wird heute in den allermeisten Fällen auf eine stark virtualisierte und containerisierte
+Infrastruktur gesetzt, anstatt auf große monolithische Anwendungen. Dies ermöglicht sowohl eine deutlich
+bessere Skalierung, als auch eine einfachere Wartung und ein schnelleres Deployment der Anwendung. Statt 
+bei jeder Änderung eine komplett neue Version dem Kunden zur Verfügung zu stellen, muss hierbei einfach der 
+zugehörige Container neu deployed werden. Zudem dies 
+
+
+\section{Problemanalyse}
+% ...
+
+\section{Zielstellung und Forschungsfragen}
+% ...
+
+\section{Related Work}
+% ...
+
+\section{Lösungsansatz}
+% ...
+
+\section{Evaluation}
+% ...
+
+\section{Zeitplan}
+% ...
+
+
+
+\end{document}
