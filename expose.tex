@@ -62,18 +62,45 @@ Um diese eingeschränkte Funktionalität zu erweitern und die Wiederverwendbarke
 zwingend notwendig die Flexibilität der softwareseitigen Applikationen auf Satelliten zu erhöhen. 
 Hierbei genügt ein einfacher Blick auf die Entwicklung von Software für terristische Anwendungen um 
 Verbesserungen ausmachen zu können. 
-Im Cloud-Computing wird heute in den allermeisten Fällen auf eine stark virtualisierte und containerisierte
+Im Cloud-Computing wird heute hauptsächlich auf eine stark virtualisierte und containerisierte
 Infrastruktur gesetzt, anstatt auf große monolithische Anwendungen. Dies ermöglicht sowohl eine deutlich
-bessere Skalierung, als auch eine einfachere Wartung und ein schnelleres Deployment der Anwendung. Statt 
-bei jeder Änderung eine komplett neue Version dem Kunden zur Verfügung zu stellen, muss hierbei einfach der 
-zugehörige Container neu deployed werden. Zudem dies 
+bessere Skalierung, als auch eine einfachere Wartung und ein schnelleres Deployment aktualisierter Versionen. 
+Anstatt bei jeder Änderung eine komplett neue Version dem Kunden zur Verfügung zu stellen, muss hierbei 
+lediglich der zugehörige Container neu deployed werden. Diese Flexibilität bringt viele Vorteile mit sich, 
+welche ebenfalls bei der Anwendung in der Entwicklung von Satelliten Anwendung finden würden. Anstatt ein 
+eigenes OS zu entwickeln, was nach gewisser Zeit nur noch begrenzt aktualisiert werden kann, könnte die 
+Hauptfunktionalität als unabhängig als Container deployed werden. Auf diese Weise ist es leichter möglich 
+die Funktionalität zu updaten oder sogar komplett neu zu entwickeln um nachträglich eine höhere Effizienz oder 
+neue Funktionen zu implementieren. Auch eine Teilung der Zugriffszeit auf den Satelliten mit differenzierten 
+Anwendungsfällen ist denkbar. Somit können sich Firmen zusammenschließen um gemeinsam die Kosten für die 
+Entwicklung bereitzustellen. Ist der Satellit erst einmal im All deployed können beide Firmen durch die 
+Separierung der Container unabhängig voneinander Berechnungen durchführen. 
 
 
 \section{Problemanalyse}
-% ...
+Die Ausrichtung an terristischen Cloud-Infrastrukturen als Ansatz auf Satelliten bietet viele Vorteile, 
+ist allerdings mit vielen Hindernissen verbunden. Eine einfache Übernahme des Konzeptes ist aufgrund der 
+unterschiedlichen Kommunikationseigenschaften zwischen Erde und All so nicht möglich. Aufgrund der größeren
+Distanz und der Begrenzung auf Funktechnologie zur Datenübertragen kommt es hierbei zu deutlich höheren 
+Latenzen. Auch komplette Abbrüche der Verbindungen über einen längeren Zeitraum sind nicht untypisch. Bei 
+solchen Bedingungen ist es nicht ohne weiteres möglich übliche terristische Kommunikationsprotokolle zu 
+verwenden, da diese nicht für solch hohe Latenzen entwickelt wurden. Auch Verbindungsabbrüche über einen 
+werden längeren Zeitraum werden aufgrund seltener Vorkommnisse auf der Erde nicht ausreichend abgefangen. 
+Um dennoch diese Prinzipien im All zu implementieren, könnte eine Neuentwicklung mit Fokus auf dem Betrieb 
+von Container auf Satelliten angestoßen werden. Allerdings ist eine Neuentwicklung zum Einen immer mit einem 
+erheblichen Aufwand und Kosten verbunden. Zum Anderen gestaltet sich die Administration im späteren laufenden 
+Betrieb schwierig, da bei einem neuen System keine Erfahrungswerte und dementsprechend wenig geschulte 
+Fachkräfte bereitstehen. Daher ist es generell von Vorteil bereits existierende Lösungen, welche sich seit 
+Jahren am Markt etabliert haben zu favoritisieren. Dabei kann nicht nur auf einen breite Erfahrungswerte bei
+der Entwicklung dieser Lösungen vertraut werden, sonder es kann ebenfalls bereits auf geschultes Personal zur 
+Administration dieser Systeme zurückgegriffen werden. Somit besteht die Herausforderung diese bereits
+existierenden Lösung für den Einsatz im All auf Satelliten anzupassen.
 
 \section{Zielstellung und Forschungsfragen}
-% ...
+Die allgemeine Zielsetzung ist die Entwicklung und anschließende Evaluierung von Kubernetes Cluster auf
+Rechnerknoten im Weltall. Bei Kubernetes handelt es sich um ein sehr mächtiges Werkzeug zur 
+Containerorchestrierung, welches durch seine Vielseitigkeit und xxxx sich im Cloud-Computing als de facto
+Standard durchgesetzt hat. 
 
 \section{Related Work}
 % ...
