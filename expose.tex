@@ -14,6 +14,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
 \usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{bibliography.bib}
 
 \begin{document}
 
@@ -44,60 +46,24 @@
 
 % Ab hier dein Exposé-Inhalt
 \pagenumbering{arabic}
+\tableofcontents
+\newpage
 
 \section{Motivation}
-Eine der wesentlichen Unterschiede zwischen der Entwicklung und den Betrieb von Satelliten und 
-die Entwicklung und der Betrieb von Diensten im IT Umfeld ist die Möglichkeit über die gesamte Lebensdauer
-hinweg nach Bedarf Anpassungen vorzunehmen. Die Trends der Entwicklungen von IT-Diensten der letzten Jahre 
-zeigen die Vorteile kleine Anpassungen und Korrekturen im Code schnell deployen zu können. So können 
-einfach zuvor gemachte Fehler ausgebessert und etwaige Änderungen in den Produktanforderungen auch 
-nachträglich noch umgesetzt werden. Auf diese Weise kann sich der Lebenszyklus einer Anwendung deutlich 
-verlängern. Dies ist sowohl vorteilhaft für den Kunden als auch für den Entwickler. 
-Von solch einer Flexibilität und Effizienz kann bei Satelliten bislang nur geträumt werden. Hierbei handelt
-es sich in der Regel um Maschinen, bei denen die Entwicklung von Software und Hardware zugleich erfolgt 
-und die nach ihrem Deployment im All nur sehr eingeschränkt geupdatet werden können. 
-Die Einführung von zusätzlicher oder erweiterter Funktionalität zu einem späteren Zeitpunkt ist somit 
-nicht gegeben. Dies sorgt für eine verminderten Lebenszyklus der Maschinen, da aktualisierte 
-Anforderungen nicht mehr mit bereits vorhandenen Maschinen umgesetzt werden können. 
-Um diese eingeschränkte Funktionalität zu erweitern und die Wiederverwendbarkeit zu erhöhen ist es 
-zwingend notwendig die Flexibilität der softwareseitigen Applikationen auf Satelliten zu erhöhen. 
-Hierbei genügt ein einfacher Blick auf die Entwicklung von Software für terristische Anwendungen um 
-Verbesserungen ausmachen zu können. 
-Im Cloud-Computing wird heute hauptsächlich auf eine stark virtualisierte und containerisierte
-Infrastruktur gesetzt, anstatt auf große monolithische Anwendungen. Dies ermöglicht sowohl eine deutlich
-bessere Skalierung, als auch eine einfachere Wartung und ein schnelleres Deployment aktualisierter Versionen. 
-Anstatt bei jeder Änderung eine komplett neue Version dem Kunden zur Verfügung zu stellen, muss hierbei 
-lediglich der zugehörige Container neu deployed werden. Diese Flexibilität bringt viele Vorteile mit sich, 
-welche ebenfalls bei der Anwendung in der Entwicklung von Satelliten Anwendung finden würden. Anstatt ein 
-eigenes OS zu entwickeln, was nach gewisser Zeit nur noch begrenzt aktualisiert werden kann, könnte die 
-Hauptfunktionalität als unabhängig als Container deployed werden. Auf diese Weise ist es leichter möglich 
-die Funktionalität zu updaten oder sogar komplett neu zu entwickeln um nachträglich eine höhere Effizienz oder 
-neue Funktionen zu implementieren. Auch eine Teilung der Zugriffszeit auf den Satelliten mit differenzierten 
-Anwendungsfällen ist denkbar. Somit können sich Firmen zusammenschließen um gemeinsam die Kosten für die 
-Entwicklung bereitzustellen. Ist der Satellit erst einmal im All deployed können beide Firmen durch die 
-Separierung der Container unabhängig voneinander Berechnungen durchführen. 
+Derzeit befinden sich laut Schätzungen der EUROPEAN SPACE AGENCY (ESA) ungefähr 16910 aktive und inaktive  Satelliten in der Erdumlaufbahn, welche bisher bereits für geschätzte 650 Kollisionen oder Beschädigungen geführt haben sollen.\cite{esa_numbers}
+Gleichzeitig zeigt sich eine konstante Zunahme der Aktivitäten im Weltall. So beträgt das aktuell durchschnittliche Wachstum von Investitionen in der Raumfahrt alleine aus dem öffentlichen Sektor bereits 9\%.\cite{esa_report2025} Obwohl Investitionen von Jahr zu Jahr schwanken, zeigt sich über mehrere Jahre hinweg ein deutlicher Trend nach oben. Um der steigenden Nachfrage bei zunehmenden Probleme durch die quantitative Anzahl von Satelliten im All dennoch gerecht zu werden, sollte der Fokus bei Neuentwicklungen von künftigen Satelliten eine mögliche Verlängerung der Lebenszyklen stärker in Betracht ziehen. Eine weitere Lösung wäre die Implementation von multi-tenant-Systemen auf Satelliten. Dies würde es ermöglichen von einem physischen Satelliten aus für mehrer Kunden unabhänig voneinander benötigte Services aus dem All anzubieten. 
+Eine mögliche Lösung ist es, den Ansatz von Cloud-Computing auf Satelliten auszuweiten und umzusetzen. Hierbei wird, wie bei terristischen Anwendungen üblich, eine Abstraktion zwischen dem System, welches den Satelliten steuert und mit der Sensorik kommuniziert, und dem Anwendungsprogramm, welches den eigentlichen Service bereitstellt, eingeführt. Dadurch besteht zum Einen die Möglichkeit die Lebensdauer eines Satelliten zu erhöhen, da das Anwendungsprogramm durch seine gesonderte Implementierung leicht aktualisiert oder sogar ganz ausgetauscht werden kann. Zum Anderen besteht die Möglichkeit durch eine Containerisierung der Applikationen wie bei terristischen Cloud-Anwendungen, mehrere Container gleichzeitig und damit auch mehrere Services auf einem Satelliten zur Verfügung zu stellen. Dies würde die Nachfrage nach einzelner dedizierter Hardware für jeden einzelnen Service im Weltall senken.  
 
-
-\section{Problemanalyse}
+\section{Problemanalyse \& Zielstellung}
 Die Ausrichtung an terristischen Cloud-Infrastrukturen als Ansatz auf Satelliten bietet viele Vorteile, 
-ist allerdings mit vielen Hindernissen verbunden. Eine einfache Übernahme des Konzeptes ist aufgrund der 
-unterschiedlichen Kommunikationseigenschaften zwischen Erde und All so nicht möglich. Aufgrund der größeren
-Distanz und der Begrenzung auf Funktechnologie zur Datenübertragen kommt es hierbei zu deutlich höheren 
-Latenzen. Auch komplette Abbrüche der Verbindungen über einen längeren Zeitraum sind nicht untypisch. Bei 
-solchen Bedingungen ist es nicht ohne weiteres möglich übliche terristische Kommunikationsprotokolle zu 
-verwenden, da diese nicht für solch hohe Latenzen entwickelt wurden. Auch Verbindungsabbrüche über einen 
-werden längeren Zeitraum werden aufgrund seltener Vorkommnisse auf der Erde nicht ausreichend abgefangen. 
+ist allerdings ebenfalls mit einigen Hindernissen verbunden. Eine simple Übernahme des Konzeptes ist aufgrund unterschiedlicher Kommunikationseigenschaften zwischen Erde und All nicht möglich. Aufgrund einer größeren Distanz und der Begrenzung auf Funktechnologie zur Datenübertragen kommt es hierbei zu deutlich höheren Latenzen. Auch komplette Abbrüche der Verbindungen über einen längeren Zeitraum sind nicht untypisch. Typische terristische Kommunikationsprotokolle sind für solche Bedingungen nicht ausgelegt und können dementsprechend nicht einfach verwendet werden. 
 Um dennoch diese Prinzipien im All zu implementieren, könnte eine Neuentwicklung mit Fokus auf dem Betrieb 
-von Container auf Satelliten angestoßen werden. Allerdings ist eine Neuentwicklung zum Einen immer mit einem 
-erheblichen Aufwand und Kosten verbunden. Zum Anderen gestaltet sich die Administration im späteren laufenden 
-Betrieb schwierig, da bei einem neuen System keine Erfahrungswerte und dementsprechend wenig geschulte 
-Fachkräfte bereitstehen. Daher ist es generell von Vorteil bereits existierende Lösungen, welche sich seit 
-Jahren am Markt etabliert haben zu favoritisieren. Dabei kann nicht nur auf einen breite Erfahrungswerte bei
-der Entwicklung dieser Lösungen vertraut werden, sonder es kann ebenfalls bereits auf geschultes Personal zur 
-Administration dieser Systeme zurückgegriffen werden. Somit besteht die Herausforderung diese bereits
-existierenden Lösung für den Einsatz im All auf Satelliten anzupassen.
+von Container auf Satelliten angestoßen werden. Diese wäre allerdings mit einem erhelblichen Aufwand und hohen Kosten verbunden. Zudem gestaltet sich die Administration im späteren laufenden 
+Betrieb schwierig, aufgrund der bisher noch nicht vorhandenen Erfahrenswerte oder geschultes Personal. Daher ist es generell von Vorteil in solchen Fällen auf bereits existierende Lösungen zurückzugreifen, welche sich seit Jahren am Markt beweisen konnten. Somit kann nicht nur auf einen breite Erfahrungswerte beim Betrieb dieser Lösungen vertraut werden, sonder es kann ebenfalls auf bereits geschultes Personal zur 
+Administration zurückgegriffen werden. 
+Die weltweit am meisten genutzte Anwendung zur Orchestrierung von Containern ist Kubernetes, welches 2014 als OpenSource-Projekt von Google veröffentlicht wurde. 
+% ab hier vorfahren --> 
 
-\section{Zielstellung und Forschungsfragen}
 Die allgemeine Zielsetzung ist die Entwicklung von Ansätzen um Kubernetes Cluster auf Rechnerknoten im Weltall zu installieren und betreiben. Bei Kubernetes handelt es sich um ein mächtiges Werkzeug zur Orchestrierung von Containern, welches sich durch seine Vielseitigkeit und Erweiterbarkeit im Cloud-Computing als de facto Standard durchgesetzt hat. Deswegen existieren bereits eine Vielzahl von Erweiterungen, die auf dem reinen Kubernetes aufbauen und sich somit noch gezielter auf bestimmte Anwendungsfälle zugeschnitten werden können.
 Um Kubernetes Cluster so zu konfigurieren, dass sie auf einem Satelliten deployed werden können müssen  zunächst zwei wichtige Punkte beachtet werden. Das erste Problem betrifft die physischen Ressourcen, die in einem Satelliten verbaut werden und somit dem Cluster am Ende zur Verfügung stehen. Kubernetes wird vorrangig von großen Cloud- oder Serviceprovidern betrieben wird, die hierfür oftmals gesamte Rechenzentren als physische Ressourcen zur Verfügung haben. Ganz anders ist dies bei Satelliten. Hier stehen nur begrenzt physische Ressourcen zur Verfügung, da diese mit deutlich höheren Kosten verbunden sind, als terristische Ressourcen. Zudem besteht bei Satelliten, im Gegensatz zu Rechenzentren auf der Erde, nicht die Möglichkeit die pyhsisch eingebauten Ressourcen nachträglich zu erhöhen oder gar auszutauschen, sobald sie im All deployed wurden. Somit ist eine Kernanforderung die Verwendung von möglichtst leichtgewichtigen Distributionen, um eine möglichst effiziente Nutzung zu gewährleisten, sodass am Ende für den Betrieb der Container ausreichend Ressourcen zur Verfügung stehen. Da diese Distribution im Rahmen der Erstinstallation ebenfalls zunächst einmal auf den Satelliten gelangen muss, ist es hierbei ebenfalls erforderlich die gesamte Speichergröße zu gering wie möglich zu halten.
 Das zweite Problem bezieht sich, wie bereits in der Problemanalyse ausführlich erläutert, auf die Kommunikation zwischen den Satelliten und der Bodenstation. Das Cluster muss in der Lage sein mit deutlich höheren Latenzen umgehen zu können. Zudem darf auch ein kompletter vorrübergehender Verbindungsabbruch der Kommunikation nicht zum Absturz des Clusters führen. 
@@ -145,6 +111,7 @@ Woche & durchzuführende Tätigkeit \\
 \hline
 \end{tabular}
 
+\printbibliography
 
 
 \end{document}
