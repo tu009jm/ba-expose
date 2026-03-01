@@ -15,6 +15,9 @@
 \usepackage[ngerman]{babel}
 \usepackage[hidelinks]{hyperref}
 \usepackage[backend=biber]{biblatex}
+\usepackage{enumitem}
+\usepackage[ngerman]{babel}
+
 \addbibresource{bibliography.bib}
 
 \begin{document}
@@ -47,6 +50,8 @@
 % Ab hier dein Exposé-Inhalt
 \pagenumbering{arabic}
 \tableofcontents
+\cleardoublepage
+\markboth{}{}
 \newpage
 
 \section{Motivation}
@@ -61,55 +66,148 @@ Um dennoch diese Prinzipien im All zu implementieren, könnte eine Neuentwicklun
 von Container auf Satelliten angestoßen werden. Diese wäre allerdings mit einem erhelblichen Aufwand und hohen Kosten verbunden. Zudem gestaltet sich die Administration im späteren laufenden 
 Betrieb schwierig, aufgrund der bisher noch nicht vorhandenen Erfahrenswerte oder geschultes Personal. Daher ist es generell von Vorteil in solchen Fällen auf bereits existierende Lösungen zurückzugreifen, welche sich seit Jahren am Markt beweisen konnten. Somit kann nicht nur auf einen breite Erfahrungswerte beim Betrieb dieser Lösungen vertraut werden, sonder es kann ebenfalls auf bereits geschultes Personal zur 
 Administration zurückgegriffen werden. 
-Die weltweit am meisten genutzte Anwendung zur Orchestrierung von Containern ist Kubernetes, welches 2014 als OpenSource-Projekt von Google veröffentlicht wurde. 
-% ab hier vorfahren --> 
-
-Die allgemeine Zielsetzung ist die Entwicklung von Ansätzen um Kubernetes Cluster auf Rechnerknoten im Weltall zu installieren und betreiben. Bei Kubernetes handelt es sich um ein mächtiges Werkzeug zur Orchestrierung von Containern, welches sich durch seine Vielseitigkeit und Erweiterbarkeit im Cloud-Computing als de facto Standard durchgesetzt hat. Deswegen existieren bereits eine Vielzahl von Erweiterungen, die auf dem reinen Kubernetes aufbauen und sich somit noch gezielter auf bestimmte Anwendungsfälle zugeschnitten werden können.
-Um Kubernetes Cluster so zu konfigurieren, dass sie auf einem Satelliten deployed werden können müssen  zunächst zwei wichtige Punkte beachtet werden. Das erste Problem betrifft die physischen Ressourcen, die in einem Satelliten verbaut werden und somit dem Cluster am Ende zur Verfügung stehen. Kubernetes wird vorrangig von großen Cloud- oder Serviceprovidern betrieben wird, die hierfür oftmals gesamte Rechenzentren als physische Ressourcen zur Verfügung haben. Ganz anders ist dies bei Satelliten. Hier stehen nur begrenzt physische Ressourcen zur Verfügung, da diese mit deutlich höheren Kosten verbunden sind, als terristische Ressourcen. Zudem besteht bei Satelliten, im Gegensatz zu Rechenzentren auf der Erde, nicht die Möglichkeit die pyhsisch eingebauten Ressourcen nachträglich zu erhöhen oder gar auszutauschen, sobald sie im All deployed wurden. Somit ist eine Kernanforderung die Verwendung von möglichtst leichtgewichtigen Distributionen, um eine möglichst effiziente Nutzung zu gewährleisten, sodass am Ende für den Betrieb der Container ausreichend Ressourcen zur Verfügung stehen. Da diese Distribution im Rahmen der Erstinstallation ebenfalls zunächst einmal auf den Satelliten gelangen muss, ist es hierbei ebenfalls erforderlich die gesamte Speichergröße zu gering wie möglich zu halten.
-Das zweite Problem bezieht sich, wie bereits in der Problemanalyse ausführlich erläutert, auf die Kommunikation zwischen den Satelliten und der Bodenstation. Das Cluster muss in der Lage sein mit deutlich höheren Latenzen umgehen zu können. Zudem darf auch ein kompletter vorrübergehender Verbindungsabbruch der Kommunikation nicht zum Absturz des Clusters führen. 
+Die weltweit am meisten genutzte Anwendung zur Orchestrierung von Containern ist Kubernetes, welches 2014 als OpenSource-Projekt von Google veröffentlicht wurde und sich mittlerweile als de facto Standard durchgesetzt hat. Die starke Verbreitung von Kubernetes kann zum Einen auf den breiten Umfang an Funktionen zurückgeführt werden, die schon out-of-the-box mitgeführt werden, wie die automatische Bereitstellung und Rollout der Container, bis hin zum Lastenausgleich und Skalierung. Zum Anderen bieten sich die Möglichkeit, durch die Veröffentlichung als OpenSource-Projekt, den Basis Code umzuschreiben oder eigene Erweiterungen zu erstellen und so die Software noch gezielter an eigene Bedürfnisse und Anwendungsfälle auszurichten. 
+Um Kubernetes so zu konfigurieren, dass es auf einem Satelliten deployed werden können müssen, ergeben sich  zunächst zwei Probleme. Das Erste betrifft die physischen Ressourcen, die in einem Satelliten verbaut werden und somit dem Cluster am Ende zur Verfügung stehen. Kubernetes wird vorrangig von großen Cloud- oder Serviceprovidern betrieben, denen hierfür oftmals gesamte Rechenzentren als physische Ressourcen zur Verfügung stehen. Ganz anders ist dies bei Satelliten der Fall, die nur begrenzt physische Ressourcen zur Verfügung haben, da diese mit deutlich höheren Kosten verbunden sind, als vergleichbare terristische Ressourcen auf der Erde. Zudem besteht bei Satelliten, im Gegensatz zu Rechenzentren auf der Erde, nicht die Möglichkeit pyhsisch eingebauten Ressourcen nachträglich zu erhöhen oder gar komplett auszutauschen, sobald sie erst einmal im All deployed wurden. Somit ist eine Kernanforderung, die Verwendung von leichtgewichtigen Distributionen, um eine möglichst effiziente Nutzung zu gewährleisten, die am Ende für den Betrieb der Container noch ausreichend Ressourcen zulässt. Da diese Distribution im Rahmen der Erstinstallation ebenfalls zunächst einmal auf den Satelliten gelangen muss, ist hierbei ebenfalls erforderlich die gesamte Größe der Installationsdatei zu gering wie möglich zu halten.
+Das zweite Problem bezieht sich, wie bereits ausführlich erläutert, auf die Kommunikation zwischen den Satelliten und der Bodenstation. Kubernetes muss in der Lage sein mit deutlich höheren Latenzen umgehen zu können. Zudem darf auch ein kompletter vorrübergehender Verbindungsabbruch der Kommunikation nicht zum Absturz führen. 
 
 
 \section{Related Work}
-Durch durch die breite Nutzung und Flexibilität von Kubernetes existieren bereits einige Distributionen, welche sehr minimale Systemanforderungen hinsichtlich Arbeitsspeicher und Speicher besitzen. Im Folgenden wird eine Auswahl von ihnen genauer vorgestellt. 
-\subsection{k3s}
-K3s ist eine Kubernetes-Distribution, die speziell für den Einsatz in IoT- und Edge-Computing entworfen wurde, weshalb sie sich besonders gut für Umgebungen, mit begrenzten Ressourcen eignet. Zudem ist die Binärdatei, welche zu Installation übertragen werden muss kleiner als 70 MB, was für eine Übertragung ins All vorteilhaft ist. Dabei können weitere Funktionalitäten ebenfalls zu einem späteren Zeitpunkt noch als Add-On ergänzend nachträglich installiert werden. 
+\subsection{Kubernetes Distributionen}
+Die wichtigste Anforderung an Kubernetes Distribution sind zunächst einmal geringe Anforderungen an pyhsische Ressourcen. Dies bezieht sich sowohl auf die Größe der Installationsdatei, als auch auf den späteren Verbrauch im Produktivbetrieb. Zudem ist die Unterstützung von sowohl ARM- als auch X86-Architekturen von Vorteil, da eine Auswahl der Architektur in einem bereits deployeden Satelliten nachträglich nicht mehr möglich ist. Für die Installation ist ebenfalls wichtig, das die Distributionen eine air-gapped Installation unterstützen. Dies bedeutet die Installation kann vollständig offline mit zuvor heruntergeladenen Paketen durchgeführt werden ohne, das nachträglich noch bestimmte Abhängigkeiten nachinstalliert werden müssen. Dies gilt ebenfalls für spätere Updates. 
 
-\subsection{MicroK8s}
-MicroK8s ist ebenfalls für den Betrieb in ressourcenarmen Umgebungen konzipiert und ist vergleichsweise simple einzurichten. Dabei kann die vorhandene Funktionalität ebenfalls wie bei k3s anhand von Add-Ons erweitert werden. Ein weiterer Vorteil von MicroK8s ist sein Fokus auf Robustheit. Funktionen wie Transaktionale Over-the-Air-Patches, Sicherheitskorrekturen sowie eine selbstheilende Hochverfügbarkeit der Kubernetes-Control-Plane-Dienste sorgen für eine hohe Ausfallsicherheit, welche besonders an entlegenden Orten wie dem Weltall vorteilhaft ist. MicroK8s kann zudem ohne Snap-Abhängigkeiten und mit containerd als Runtime betrieben werden, was den gesamten Overhead noch weiter senkt. 
-
-\subsection{k0s}
-K0s ist eine weitere abgespeckte Kubernetes Distribution welche unter anderem auch für den Einsatz in Edge Computing entwickelt wurde. Neben einer sehr simplen und schnellen Einrichtung, bietet K0S ebenfalls eine offline-Installation an in der die Binary und alle gewünschten Container-Images als Bundle zuvor heruntergeladen und dann in einem Schritt Installiert werden kann. Zudem besitzt k0s keine weiteren Abhänigkeiten gegenüber den Host-Betriebssystem, kann also auf jeder Linux Distribution installiert werden.
-
-\subsection{KubeEdge}
-KubeEdge ist, wie der Name es bereits andeutet, ebenfalls eine Edge-Computing Distribution von Kubernetes. Dies ermöglicht einen Arbeitsspeicherverbauch von 70 MB, was selbst unter den leichtgewichtigen Kubernetes-Distributionen sehr wenig ist. Auch andere Edge- Funktionalitäten wie der kontinuierliche Betrieb auch bei Verbindungsabbrüche oder die Vereinfachte Kommunikation mit IOT-Geräten sind bei KubeEdge schon standardmäßig implementiert. 
-
-\par
-Alle vorgestellten Distributionen können sowohl auf x86-, als auch auf ARM-Architekturen ausgeführt werden. 
-Auch in Bezug auf die Probleme hinsichtlich der Verwendung von terristischen Kommunikationsprotokolle im All gibt es bereits Ansätze und Arbeiten. Im Folgenden werden einige Ansätze genauer vorgestellt.
+Aufgrund der weit verbreiteten Nutzung von Kubernetes existieren bereits einige Distribution, welche für den Einsatz in IoT- und Edge-Computing vorgesehen sind und dementsprechend einen geringen eigenen Ressourcenverbrauch besitzen. Einige Beispiele hierfür sind k3s, MicroK8s, k0s und KubeEdge. Um den Einschränkungen im Bereich Ressourcenverbrauch und Speicherplatz gerecht zu werden, wurde der Funktionsumfang eingeschränkt. Allerdings bieten alle genannten Distributionen die Möglichkeit zusätzlich benötigte Funktionalitäten mit Addons oder Extension beim Installationsprozess mit hinzuzufügen. Zudem muss sichergestellt werden, dass die Distribution ebenfalls mit Komminikationsausfälle zurecht kommt und offline ihre Arbeit weiter fortsetzt.  
 
 \subsection{Bundel Protokoll}
-Das Bundel Protokoll wurde speziell für die Kommunikation hohen Latenzen und Verbindungsabbrüchen entwickelt und findet seinen Einsatz vorrangig im Weltall. Dabei nutzt das Protokoll die "Store and Forward" Technik, bei der Informationen auf Nodes zwischengespeichert werden können, um sie zu einem späteren Zeitpunkt weiter zu schicken. So erreichen die Informationen zuverlässig ihr Ziel, auch wenn der Zielknoten für eine längere Zeit von der Kommunikation abgeschnitten ist. Das Bundle Protokoll fungiert dabei als Overlay-Protokoll, da es über den verschiedenen Transportprotokollen wie TCP oder UDP arbeitet. 
+Das Bundle Protokoll wurde für Delay-Tolerant Networking (DTN), Netzwerke in denen hohe Latenzen existieren und Verbindungsabbrüche regelmäßig auftreten, entwickelt findet demzufolge eine breite Anwendung für die Kommunikation im All.\cite{bundleProtocoll_rfc} Dabei nutzt das Protokoll die Store-and-Forward Technik, bei der Informationen auf Nodes zwischengespeichert werden können, um sie, falls der Empfänger aktuell nicht erreichbar ist, zu einem späteren Zeitpunkt weiterzuleiten. So kann sichergestellt werden, das Informationen auch bei sich ständig ändernden Verfügbarkeiten (und damit auch Topologien) trotzdem zuverlässig zugestellt werden. Das Bundle Protokoll fungiert dabei als Overlay-Protokoll, da es über den verschiedenen Transportprotokollen wie TCP oder UDP arbeitet. Es gibt zahlreiche bereits Implementierte und getestete Anwendungen, welche auf dem Bundle Protokoll aufbauen. Für diese Arbeit werden bevorzugt Anwendungen untersucht, die sich als Container laufen lassen können und für den Einsatz in Edge-Umgebungen mit wenig physischen Resourcen vorgesehen sind. Beispiele hierfür sind OIN-DTN\cite{ION} und HDTN\cite{hdtn}, welche beide von der NASA für Deep-Space-Missionen entwickelt wurden und µD3TN\cite{µD3TN}, was optimiert für die Verwendung in u.a. Sensor-Netzwerke und IoT-Geräte ist. 
 
 \section{Lösungsansatz}
-FÜr die Entwicklung eines Lösungsansatzes werden geeignete Kubernetes Distributionen anhand einer Auswahl von Kriterien miteinander verglichen um die am besten geeignete Distribution auszuwählen. Hierbei wird unterschieden in der Installation auf der Erde und einer Installation auf einen bereits deployeden Satelliten im All. Die letzter Variante soll dann versuchsweise auf einem Testsystem installiert werden. Dafür wird zunächst ein virtuelles System aufgesetzt, welches die unzuverlässige Kommunikation im All simulieren soll. Anschließend wird über diese DTN-Verbindung die ausgewählte Kubernetes Distribution installiert und eingerichtet. Auch die Betriebnahme des Klusters mit der Installation von Containern soll evaluiert werden. 
+FÜr die Entwicklung eines Lösungsansatzes werden geeignete Kubernetes Distributionen anhand einer Auswahl von Kriterien miteinander verglichen um die am besten geeignete Distribution auszuwählen. Hierbei wird unterschieden in der Installation auf der Erde und einer Installation auf einen bereits deployeden Satelliten im All. Die letzter Variante soll dann versuchsweise auf einem Testsystem installiert werden. Dafür wird ein virtuelles System aufgesetzt, welches die unzuverlässige Kommunikation im All simuliert. Anschließend wird über diese DTN-Verbindung die ausgewählte Kubernetes Distribution installiert und eingerichtet. Auch die Betriebnahme des Klusters mit der Installation von Containern und die Möglichkeit anschießend Updates durchzuführen soll evaluiert werden. 
 
 \section{Evaluation}
-Die Implementation soll anschließend anhand der Machbarkeit evaluiert werden. Dafür wird auf etwaige Hindernisse oder Beschränkungen eingegangen, welche sich in der Implementationsphase ergeben haben. Es können zudem Einschätzungen bezüglich dem Ressourcenverbrauch und des zeitlichen Aufwandes getätigt werden.
+Folgende Fragen sollen anhand dieser Arbeit beantwortet und evaluiert werden: 
+
+1. Wie kann ein Kubernetes-Deployment auf einem Satelliten in einer Delay-Distribution-Net- work Umgebung realisiert werden?
+
+2. Wie gestaltet sich der Betrieb eines solchen Systems nach der Installation?
+
+Diese Fragen sollen anschließend nach der Implementation anhand der Machbarkeit evaluiert werden. Dafür wird auf etwaige Hindernisse oder Beschränkungen eingegangen, welche sich in der Implementationsphase ergeben haben. Es können zudem Einschätzungen bezüglich dem Ressourcenverbrauch und des zeitlichen Aufwandes, sowie der Replizierbarkeit auf mehreren Satelliten auf einmal getätigt werden. 
+
+\section{Vorläufige Gliederung}
+
+\begin{itemize}[label=\textbullet, nosep]
+  \item \textbf{Einleitung}
+    \begin{itemize}[label=--]
+      \item Motivation
+      \item Forschungsfragen
+    \end{itemize}
+
+  \item \textbf{Stand der Forschung}
+    \begin{itemize}[label=--]
+      \item Kubernetes
+        \begin{itemize}[label=--]
+          \item Architektur
+          \item Anforderungen
+        \end{itemize}
+    \end{itemize}
+    \begin{itemize}[label=--]
+      \item Kubernetes-Distributionen
+        \begin{itemize}[label=--]
+          \item k3s
+          \item MicroK8s
+          \item k0s
+          \item KubeEdge
+        \end{itemize}
+      \item Delay-Tolerant Networking
+      \begin{itemize}[label=--]
+          \item Grundprinzipien Bundel Protokoll
+          \item Relevante Protokolle und Implementierungen
+        \end{itemize}
+    \end{itemize}
+
+  \item \textbf{Anforderungsanalyse}
+    \begin{itemize}[label=--]
+      \item Technische Anforderungen 
+        \begin{itemize}[label=--]
+          \item Architektur
+          \item Anforderungen
+        \end{itemize}
+    \end{itemize}
+    \begin{itemize}[label=--]
+      \item Definition Lebenszyklus Szenarien 
+        \begin{itemize}[label=--]
+          \item Installation + Inbetriebnahme
+          \item Container-Deployment 
+          \item Softwareupdates in Betrieb
+        \end{itemize}
+    \end{itemize}
+
+  \item \textbf{Konzeption}
+  \begin{itemize}[label=--]
+    \item Architekturentwurf
+    \item Betriebsmodelle 
+  \end{itemize}
+
+  \item \textbf{Prototypische Implementierung}
+    \begin{itemize}[label=--]
+      \item Testumgebung
+      \item Implementierung des Integrationsansatzes
+      \item Implementation im Betrieb
+    \end{itemize}
+
+  \item \textbf{Evaluation}
+    \begin{itemize}[label=--]
+      \item Ergebnisse der Szenarien
+      \item Bewertung der Szenarien
+    \end{itemize}
+
+  \item \textbf{Fazit}
+    \begin{itemize}[label=--]
+      \item Zusammenfassen der Ergebnisse 
+      \item Beantwortung der Forschungsfragen
+      \item Limitationen
+    \end{itemize}
+\end{itemize}
+
 
 \section{Zeitplan}
 Im folgenden soll die zeitliche Planung der Aufgaben eingeteilt werden. Die gesamte Bearbeitungszeit beläuft sich auf 11 Wochen. 
-\par
-\begin{tabular}{|c|c|}
-\hline
-Woche & durchzuführende Tätigkeit \\
-\hline
-0 - 3 & Literraturrecherche \\
-4 - 5 & Vergleich der dargestellten Lösungen  \\
-6 - 8 & Implementation einer Lösung \\
-8 - 9 & Durchführung von Tests anhand der Implementation \\
-10 -11 & Evaluation der Ergebnisse \\
-\hline
-\end{tabular}
+
+\begin{itemize}[label=\textbullet, nosep]
+  \item \textbf{Woche 1-2: Vorbereitung}
+    \begin{itemize}[label=--]
+      \item Literraturrecherche
+    \end{itemize}
+
+  \item \textbf{Woche 3-4: Kubernetes}
+    \begin{itemize}[label=--]
+      \item Intensive Literraturrecherche Architektur Kubernetes
+      \item Vergleich Distributionen
+    \end{itemize}
+
+  \item \textbf{Woche 5-6: Kubernetes}
+    \begin{itemize}[label=--]
+      \item Intensive Literraturrecherche Architektur Kubernetes
+      \item Vergleich Distributionen
+    \end{itemize}
+
+  \item \textbf{Woche 7-8: Kubernetes}
+    \begin{itemize}[label=--]
+      \item Intensive Literraturrecherche Architektur Kubernetes
+      \item Vergleich Distributionen
+    \end{itemize}
+  \item \textbf{Woche 9-10: Kubernetes}
+    \begin{itemize}[label=--]
+      \item Intensive Literraturrecherche Architektur Kubernetes
+      \item Vergleich Distributionen
+    \end{itemize}
+  \item \textbf{Woche 11: Fazit}
+    \begin{itemize}[label=--]
+      \item Zusammenfassung
+      \item Vergleich Distributionen
+    \end{itemize}
+    
+\end{itemize}
+
 
 \printbibliography
 
