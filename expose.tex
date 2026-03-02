@@ -34,7 +34,7 @@
 \chair{Chair of Distributed and Networked Systems}
 
 \title{%
-  Exposé: Entwicklung von Ansätzen zur Installation und dem Betrieb von Kubernetes-Clustern auf Rechnerknoten im Weltall
+  Exposé:\\ Entwicklung von Ansätzen zur Installation und dem Betrieb von Kubernetes-Clustern auf Rechnerknoten im Weltall
 }
 
 % Fix für englische Lokalisierung von Abschlussarbeiten (optional; nur nötig, wenn du english als babel nutzt)
@@ -81,7 +81,7 @@ Aufgrund der weit verbreiteten Nutzung von Kubernetes existieren bereits einige 
 Das Bundle Protokoll wurde für Delay-Tolerant Networking (DTN), Netzwerke in denen hohe Latenzen existieren und Verbindungsabbrüche regelmäßig auftreten, entwickelt findet demzufolge eine breite Anwendung für die Kommunikation im All.\cite{bundleProtocoll_rfc} Dabei nutzt das Protokoll die Store-and-Forward Technik, bei der Informationen auf Nodes zwischengespeichert werden können, um sie, falls der Empfänger aktuell nicht erreichbar ist, zu einem späteren Zeitpunkt weiterzuleiten. So kann sichergestellt werden, das Informationen auch bei sich ständig ändernden Verfügbarkeiten (und damit auch Topologien) trotzdem zuverlässig zugestellt werden. Das Bundle Protokoll fungiert dabei als Overlay-Protokoll, da es über den verschiedenen Transportprotokollen wie TCP oder UDP arbeitet. Es gibt zahlreiche bereits Implementierte und getestete Anwendungen, welche auf dem Bundle Protokoll aufbauen. Für diese Arbeit werden bevorzugt Anwendungen untersucht, die sich als Container laufen lassen können und für den Einsatz in Edge-Umgebungen mit wenig physischen Resourcen vorgesehen sind. Beispiele hierfür sind OIN-DTN\cite{ION} und HDTN\cite{hdtn}, welche beide von der NASA für Deep-Space-Missionen entwickelt wurden und µD3TN\cite{µD3TN}, was optimiert für die Verwendung in u.a. Sensor-Netzwerke und IoT-Geräte ist. 
 
 \section{Lösungsansatz}
-FÜr die Entwicklung eines Lösungsansatzes werden geeignete Kubernetes Distributionen anhand einer Auswahl von Kriterien miteinander verglichen um die am besten geeignete Distribution auszuwählen. Hierbei wird unterschieden in der Installation auf der Erde und einer Installation auf einen bereits deployeden Satelliten im All. Die letzter Variante soll dann versuchsweise auf einem Testsystem installiert werden. Dafür wird ein virtuelles System aufgesetzt, welches die unzuverlässige Kommunikation im All simuliert. Anschließend wird über diese DTN-Verbindung die ausgewählte Kubernetes Distribution installiert und eingerichtet. Auch die Betriebnahme des Klusters mit der Installation von Containern und die Möglichkeit anschießend Updates durchzuführen soll evaluiert werden. 
+FÜr die Entwicklung eines Lösungsansatzes werden geeignete Kubernetes Distributionen anhand einer Auswahl von Kriterien miteinander verglichen um die am besten geeignete Distribution auszuwählen. Hierbei wird unterschieden in der Installation auf der Erde und einer Installation auf einen bereits deployeden Satelliten im All. Die letzter Variante soll dann versuchsweise auf einem Testsystem installiert werden. Dafür wird ein virtuelles System aufgesetzt, welches die unzuverlässige Kommunikation im All simuliert. Anschließend wird über diese DTN-Verbindung die ausgewählte Kubernetes Distribution installiert und in Form eines Clusters (mit einem oder mehreren Nodes) eingerichtet. Auch die Betriebnahme des Klusters mit der Installation von Containern und die Möglichkeit anschießend Updates durchzuführen soll evaluiert werden. 
 
 \section{Evaluation}
 Folgende Fragen sollen anhand dieser Arbeit beantwortet und evaluiert werden: 
@@ -106,7 +106,7 @@ Diese Fragen sollen anschließend nach der Implementation anhand der Machbarkeit
       \item Kubernetes
         \begin{itemize}[label=--]
           \item Architektur
-          \item Anforderungen
+          \item Anforderungen an Betrieb auf Satelliten
         \end{itemize}
     \end{itemize}
     \begin{itemize}[label=--]
@@ -176,34 +176,36 @@ Im folgenden soll die zeitliche Planung der Aufgaben eingeteilt werden. Die gesa
   \item \textbf{Woche 1-2: Vorbereitung}
     \begin{itemize}[label=--]
       \item Literraturrecherche
+      \item Recherche aktuelle Produkte
     \end{itemize}
 
   \item \textbf{Woche 3-4: Kubernetes}
     \begin{itemize}[label=--]
       \item Intensive Literraturrecherche Architektur Kubernetes
-      \item Vergleich Distributionen
+      \item Vergleichskriterien + Vergleich Distributionen
     \end{itemize}
 
-  \item \textbf{Woche 5-6: Kubernetes}
+  \item \textbf{Woche 5-6: Definition der Anforderungen}
     \begin{itemize}[label=--]
-      \item Intensive Literraturrecherche Architektur Kubernetes
-      \item Vergleich Distributionen
+      \item Aufstellen technischer Anforderung/ Architektur
+      \item Definition der Lebenszyklen 
     \end{itemize}
 
-  \item \textbf{Woche 7-8: Kubernetes}
+  \item \textbf{Woche 7-8: Testsystem + Implementation}
     \begin{itemize}[label=--]
-      \item Intensive Literraturrecherche Architektur Kubernetes
-      \item Vergleich Distributionen
+      \item Aufstellung des Testsystems 
+      \item Implementation der Lebenszyklus-Szenarien
     \end{itemize}
-  \item \textbf{Woche 9-10: Kubernetes}
+  \item \textbf{Woche 9-10: Evaluation der Ergebnisse }
     \begin{itemize}[label=--]
-      \item Intensive Literraturrecherche Architektur Kubernetes
-      \item Vergleich Distributionen
+      \item Analyse der Kriterien
+      \item Diskussion der Szenarien
     \end{itemize}
-  \item \textbf{Woche 11: Fazit}
+  \item \textbf{Woche 11: Abschluss}
     \begin{itemize}[label=--]
       \item Zusammenfassung
-      \item Vergleich Distributionen
+      \item Beantwortung zuvor definierten Forschungsfragen
+      \item Ausblick zukünftige Arbeiten
     \end{itemize}
     
 \end{itemize}
