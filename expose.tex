@@ -55,103 +55,110 @@
 \newpage
 
 \section{Motivation}
-Derzeit befinden sich laut Schätzungen der EUROPEAN SPACE AGENCY (ESA) ungefähr 16910 aktive und inaktive  Satelliten in der Erdumlaufbahn, welche bisher bereits für geschätzte 650 Kollisionen oder Beschädigungen geführt haben sollen.\cite{esa_numbers}
-Gleichzeitig zeigt sich eine konstante Zunahme der Aktivitäten im Weltall. So beträgt das aktuell durchschnittliche Wachstum von Investitionen in der Raumfahrt alleine aus dem öffentlichen Sektor bereits 9\%.\cite{esa_report2025} Obwohl Investitionen von Jahr zu Jahr schwanken, zeigt sich über mehrere Jahre hinweg ein deutlicher Trend nach oben. Um der steigenden Nachfrage bei zunehmenden Probleme durch die quantitative Anzahl von Satelliten im All dennoch gerecht zu werden, sollte der Fokus bei Neuentwicklungen von künftigen Satelliten eine mögliche Verlängerung der Lebenszyklen stärker in Betracht ziehen. Eine weitere Lösung wäre die Implementation von multi-tenant-Systemen auf Satelliten. Dies würde es ermöglichen von einem physischen Satelliten aus für mehrer Kunden unabhänig voneinander benötigte Services aus dem All anzubieten. 
-Eine mögliche Lösung ist es, den Ansatz von Cloud-Computing auf Satelliten auszuweiten und umzusetzen. Hierbei wird, wie bei terristischen Anwendungen üblich, eine Abstraktion zwischen dem System, welches den Satelliten steuert und mit der Sensorik kommuniziert, und dem Anwendungsprogramm, welches den eigentlichen Service bereitstellt, eingeführt. Dadurch besteht zum Einen die Möglichkeit die Lebensdauer eines Satelliten zu erhöhen, da das Anwendungsprogramm durch seine gesonderte Implementierung leicht aktualisiert oder sogar ganz ausgetauscht werden kann. Zum Anderen besteht die Möglichkeit durch eine Containerisierung der Applikationen wie bei terristischen Cloud-Anwendungen, mehrere Container gleichzeitig und damit auch mehrere Services auf einem Satelliten zur Verfügung zu stellen. Dies würde die Nachfrage nach einzelner dedizierter Hardware für jeden einzelnen Service im Weltall senken.  
+Während die Kosten für das Deployen von Satelliten innerhalb des Low-Earth-Orbits (LEO) in den letzten Jahren gesunken sind, und der Weltraum somit deutlich mehr Akteuren zur Verfügung steht, sieht es bei Langzeitmissionen welche ein ferneres Ziel anstreben noch ganz anders aus. Die Startkosten für einen Satelliten sind zwischen dem Jahre 2000 und 2020 um durchschnittlich etwa 5.5\% gesunken.\cite{launch_cost_reduction} Vor allem der kommerzielle Sektor profitierte durch kleinere Satelliten und technische Fortschritte bei Trägerracketen stark durch die geringeren Kosten des Deployments. Dies führte zu durchschnittlichen Startkosten von 4092\$ pro Kilo im Jahre 2020 bei kommerziellen Satelliten. 
+Sobald die Missionen allerdings außerhalb des LEO's stattfinden steigt das Budget deutlich an. Das Projekt MAVEN von der NASA umfasst einen Satelliten, welcher im November 2013 gelauncht wurde, mit der Aufgabe die Atmossphäre des Mars genauer zu untersuchen.\cite{MAVEN} Die Kosten alleine für den Launch dieses Satelliten liegen bei 187 Millionen Dollar.\cite{MAVEN_cost} Auch ähnliche Projekte wie der Mars Reconnaissance Orbiter, welcher 2005 gelauncht wurde, erreichten Kosten von rund 90 Millionen Dollar allein für sein Deployment.\cite{reconnaissance}
+Solch hohe Kosten können nur von wenigen Akteuren weltweit aufgewendet werden. Eine Möglichkeit diese Kosten zu senken, und somit die Einstiegshürde für kommerzielle Akteure niedriger zu gestalten, könnte der Zusammenschluss von Firmen bezüglich des Betrieben eines Satelliten ermöglichen. Der Satellit kann zum Beispiel ein multi-tenant System zur Verfügung stellen, welches es verschiedene Anbietern erlaubt eigene abstrahierte Instanzen zu betreiben, wie es in terristischen Systemen im Cloud-Computing bereits der Standard ist. Dabei werden nach dem Prinzip der Virtualisierung die Funktionen in verschiedene virtuelle Schichten abstrahiert. Dies sorgt nicht nur für eine Verteilung der Kosten, sonder bietet auch eine höhere Flexibilität nach dem Deployment, da ganze Teile der Implementation einzelner Anbieter leicht durch neue Versionen ersetzt werden können. Dies kann die allgemeine Lebensdauer des Satelliten erhöhen und reduziert die Nachfrage an einzelnen dedizierten Deployments. 
 
 \section{Problemanalyse \& Zielstellung}
 Die Ausrichtung an terristischen Cloud-Infrastrukturen als Ansatz auf Satelliten bietet viele Vorteile, 
-ist allerdings ebenfalls mit einigen Hindernissen verbunden. Eine simple Übernahme des Konzeptes ist aufgrund unterschiedlicher Kommunikationseigenschaften zwischen Erde und All nicht möglich. Aufgrund einer größeren Distanz und der Begrenzung auf Funktechnologie zur Datenübertragen kommt es hierbei zu deutlich höheren Latenzen. Auch komplette Abbrüche der Verbindungen über einen längeren Zeitraum sind nicht untypisch. Typische terristische Kommunikationsprotokolle sind für solche Bedingungen nicht ausgelegt und können dementsprechend nicht einfach verwendet werden. 
+ist allerdings ebenfalls mit einigen Hindernissen verbunden. Eine simple Übernahme des Konzeptes ist aufgrund unterschiedlicher Kommunikationseigenschaften zwischen Erde und All nicht möglich. Aufgrund einer größeren Distanz und der Begrenzung auf Funktechnologie zur Datenübertragen kommt es hierbei zu deutlich höheren Latenzen. Auch komplette Abbrüche der Verbindungen über einen längeren Zeitraum sind nicht untypisch. Standartisierte terristische Kommunikationsprotokolle sind für solche Bedingungen nicht ausgelegt und können dementsprechend nicht verwendet werden. 
 Um dennoch diese Prinzipien im All zu implementieren, könnte eine Neuentwicklung mit Fokus auf dem Betrieb 
-von Container auf Satelliten angestoßen werden. Diese wäre allerdings mit einem erhelblichen Aufwand und hohen Kosten verbunden. Zudem gestaltet sich die Administration im späteren laufenden 
-Betrieb schwierig, aufgrund der bisher noch nicht vorhandenen Erfahrenswerte oder geschultes Personal. Daher ist es generell von Vorteil in solchen Fällen auf bereits existierende Lösungen zurückzugreifen, welche sich seit Jahren am Markt beweisen konnten. Somit kann nicht nur auf einen breite Erfahrungswerte beim Betrieb dieser Lösungen vertraut werden, sonder es kann ebenfalls auf bereits geschultes Personal zur 
-Administration zurückgegriffen werden. 
+von Virtualisierung auf Satelliten angestoßen werden. Diese wäre allerdings mit einem erhelblichen Aufwand und hohen Kosten verbunden. Zudem gestaltet sich die Administration im späteren laufenden 
+Betrieb schwierig, aufgrund der bisher noch nicht vorhandenen Expertise und geschultem Personal. Daher ist es generell von Vorteil, in solchen Fällen auf bereits existierende Lösungen zurückzugreifen, welche sich bereits seit Jahren am Markt beweisen konnten. Somit kann nicht nur auf einen breite Expertise beim Betrieb solcher Lösungen vertraut werden, es kann ebenfalls auf bereits geschultes Personal zur Administration zurückgegriffen werden. 
 Die weltweit am meisten genutzte Anwendung zur Orchestrierung von Containern ist Kubernetes, welches 2014 als OpenSource-Projekt von Google veröffentlicht wurde und sich mittlerweile als de facto Standard durchgesetzt hat. Die starke Verbreitung von Kubernetes kann zum Einen auf den breiten Umfang an Funktionen zurückgeführt werden, die schon out-of-the-box mitgeführt werden, wie die automatische Bereitstellung und Rollout der Container, bis hin zum Lastenausgleich und Skalierung. Zum Anderen bieten sich die Möglichkeit, durch die Veröffentlichung als OpenSource-Projekt, den Basis Code umzuschreiben oder eigene Erweiterungen zu erstellen und so die Software noch gezielter an eigene Bedürfnisse und Anwendungsfälle auszurichten. 
-Um Kubernetes so zu konfigurieren, dass es auf einem Satelliten deployed werden können müssen, ergeben sich  zunächst zwei Probleme. Das Erste betrifft die physischen Ressourcen, die in einem Satelliten verbaut werden und somit dem Cluster am Ende zur Verfügung stehen. Kubernetes wird vorrangig von großen Cloud- oder Serviceprovidern betrieben, denen hierfür oftmals gesamte Rechenzentren als physische Ressourcen zur Verfügung stehen. Ganz anders ist dies bei Satelliten der Fall, die nur begrenzt physische Ressourcen zur Verfügung haben, da diese mit deutlich höheren Kosten verbunden sind, als vergleichbare terristische Ressourcen auf der Erde. Zudem besteht bei Satelliten, im Gegensatz zu Rechenzentren auf der Erde, nicht die Möglichkeit pyhsisch eingebauten Ressourcen nachträglich zu erhöhen oder gar komplett auszutauschen, sobald sie erst einmal im All deployed wurden. Somit ist eine Kernanforderung, die Verwendung von leichtgewichtigen Distributionen, um eine möglichst effiziente Nutzung zu gewährleisten, die am Ende für den Betrieb der Container noch ausreichend Ressourcen zulässt. Da diese Distribution im Rahmen der Erstinstallation ebenfalls zunächst einmal auf den Satelliten gelangen muss, ist hierbei ebenfalls erforderlich die gesamte Größe der Installationsdatei zu gering wie möglich zu halten.
-Das zweite Problem bezieht sich, wie bereits ausführlich erläutert, auf die Kommunikation zwischen den Satelliten und der Bodenstation. Kubernetes muss in der Lage sein mit deutlich höheren Latenzen umgehen zu können. Zudem darf auch ein kompletter vorrübergehender Verbindungsabbruch der Kommunikation nicht zum Absturz führen. 
+Um Kubernetes so zu konfigurieren, dass es auf einem Satelliten deployed werden kann, ergeben sich zunächst zwei Probleme. Das Erste betrifft die physischen Ressourcen, welche in einem Satelliten verbaut werden und somit dem Cluster am Ende zur Verfügung stehen. Kubernetes wird vorrangig von großen Cloud- oder Serviceprovidern betrieben, denen hierfür oftmals gesamte Rechenzentren als physische Ressourcen zur Verfügung stehen. Ganz anders ist dies bei Satelliten der Fall, die nur begrenzt physische Ressourcen zur Verfügung haben, da diese mit deutlich höheren Kosten verbunden sind, als vergleichbare terristische Ressourcen auf der Erde. Zudem besteht bei Satelliten nicht die Möglichkeit pyhsisch eingebauten Ressourcen nachträglich zu erhöhen oder gar komplett auszutauschen, sobald sie erst einmal im All deployed wurden. Somit ist eine Kernanforderung, die Verwendung von leichtgewichtigen Distributionen, um eine möglichst effiziente Nutzung zu gewährleisten, die am Ende für den Betrieb der Container noch ausreichend Ressourcen zulässt. Da diese Distribution im Rahmen der Erstinstallation ebenfalls zunächst einmal auf den Satelliten gelangen muss, ist hierbei ebenfalls erforderlich die gesamte Größe der Installationsdatei zu gering wie möglich zu halten.
+Das zweite Problem bezieht sich, wie bereits erläutert, auf die Kommunikation zwischen den Satelliten und der Bodenstation. Kubernetes muss in der Lage sein mit deutlich höheren Latenzen umgehen zu können. Zudem darf auch ein kompletter vorrübergehender Verbindungsabbruch der Kommunikation nicht zum Absturz führen. 
 
 
 \section{Related Work}
-\subsection{Kubernetes Distributionen}
-Die wichtigste Anforderung an Kubernetes Distribution sind zunächst einmal geringe Anforderungen an pyhsische Ressourcen. Dies bezieht sich sowohl auf die Größe der Installationsdatei, als auch auf den späteren Verbrauch im Produktivbetrieb. Zudem ist die Unterstützung von sowohl ARM- als auch X86-Architekturen von Vorteil, da eine Auswahl der Architektur in einem bereits deployeden Satelliten nachträglich nicht mehr möglich ist. Für die Installation ist ebenfalls wichtig, das die Distributionen eine air-gapped Installation unterstützen. Dies bedeutet die Installation kann vollständig offline mit zuvor heruntergeladenen Paketen durchgeführt werden ohne, das nachträglich noch bestimmte Abhängigkeiten nachinstalliert werden müssen. Dies gilt ebenfalls für spätere Updates. 
+\subsection{Linux \& Kubernetes Distributionen}
+Die wichtigste Anforderung an geeignete Distributionen sind geringe Anforderungen an physischen Ressourcen. Dies bezieht sich sowohl auf die Größe der Installationsdatei, als auch auf den späteren Verbrauch im Produktivbetrieb. Eine Unterstützung von sowohl ARM- als auch X86-Architekturen ist ebenfalls von Vorteil, da eine Auswahl der Architektur in einem bereits deployeden Satelliten nachträglich nicht mehr möglich ist. Für die Installation ist wichtig, dass die Distributionen eine air-gapped Installation unterstützen. Dies bedeutet, die Installation kann vollständig offline mit zuvor heruntergeladenen Paketen durchgeführt werden, ohne dass hinterher bestimmte Abhängigkeiten nachinstalliert werden müssen. Dies gilt ebenfalls für spätere Updates. Zudem sollte der Installations- und anschließende Einrichtungsprozess deklarativ konfiguriert werden können, sodass keine weiteren Eingaben während des gesamten Prozesses von außen benötigt werden. 
 
-Aufgrund der weit verbreiteten Nutzung von Kubernetes existieren bereits einige Distribution, welche für den Einsatz in IoT- und Edge-Computing vorgesehen sind und dementsprechend einen geringen eigenen Ressourcenverbrauch besitzen. Einige Beispiele hierfür sind k3s, MicroK8s, k0s und KubeEdge. Um den Einschränkungen im Bereich Ressourcenverbrauch und Speicherplatz gerecht zu werden, wurde der Funktionsumfang eingeschränkt. Allerdings bieten alle genannten Distributionen die Möglichkeit zusätzlich benötigte Funktionalitäten mit Addons oder Extension beim Installationsprozess mit hinzuzufügen. Zudem muss sichergestellt werden, dass die Distribution ebenfalls mit Komminikationsausfälle zurecht kommt und offline ihre Arbeit weiter fortsetzt.  
+Aufgrund der weit verbreiteten Nutzung von Kubernetes existieren bereits einige Linux Distribution, welche  eine Kubernetes-Integration besitzen und für den Einsatz in IoT- und Edge-Computing vorgesehen sind, also dementsprechend einen geringen eigenen Ressourcenverbrauch besitzen. Beispiele hierfür sind Talos Linux, k3OS, Elemental oder Flatcar Container Linux. Alle genannten Versionen unterstützen sowohl ARM-, als auch x86-Architekturen, können airgapped installiert und geupdatet und deklarative eingerichtet werden.
 
-\subsection{Bundel Protokoll}
+\subsection{Bundle Protokoll}
 Das Bundle Protokoll wurde für Delay-Tolerant Networking (DTN), Netzwerke in denen hohe Latenzen existieren und Verbindungsabbrüche regelmäßig auftreten, entwickelt findet demzufolge eine breite Anwendung für die Kommunikation im All.\cite{bundleProtocoll_rfc} Dabei nutzt das Protokoll die Store-and-Forward Technik, bei der Informationen auf Nodes zwischengespeichert werden können, um sie, falls der Empfänger aktuell nicht erreichbar ist, zu einem späteren Zeitpunkt weiterzuleiten. So kann sichergestellt werden, das Informationen auch bei sich ständig ändernden Verfügbarkeiten (und damit auch Topologien) trotzdem zuverlässig zugestellt werden. Das Bundle Protokoll fungiert dabei als Overlay-Protokoll, da es über den verschiedenen Transportprotokollen wie TCP oder UDP arbeitet. Es gibt zahlreiche bereits Implementierte und getestete Anwendungen, welche auf dem Bundle Protokoll aufbauen. Für diese Arbeit werden bevorzugt Anwendungen untersucht, die sich als Container laufen lassen können und für den Einsatz in Edge-Umgebungen mit wenig physischen Resourcen vorgesehen sind. Beispiele hierfür sind OIN-DTN\cite{ION} und HDTN\cite{hdtn}, welche beide von der NASA für Deep-Space-Missionen entwickelt wurden und µD3TN\cite{µD3TN}, was optimiert für die Verwendung in u.a. Sensor-Netzwerke und IoT-Geräte ist. 
 
 \section{Lösungsansatz}
-FÜr die Entwicklung eines Lösungsansatzes werden geeignete Kubernetes Distributionen anhand einer Auswahl von Kriterien miteinander verglichen um die am besten geeignete Distribution auszuwählen. Hierbei wird unterschieden in der Installation auf der Erde und einer Installation auf einen bereits deployeden Satelliten im All. Die letzter Variante soll dann versuchsweise auf einem Testsystem installiert werden. Dafür wird ein virtuelles System aufgesetzt, welches die unzuverlässige Kommunikation im All simuliert. Anschließend wird über diese DTN-Verbindung die ausgewählte Kubernetes Distribution installiert und in Form eines Clusters (mit einem oder mehreren Nodes) eingerichtet. Auch die Betriebnahme des Klusters mit der Installation von Containern und die Möglichkeit anschießend Updates durchzuführen soll evaluiert werden. 
+Für die Entwicklung eines Lösungsansatzes werden geeignete Linux Distributionen mit integrierten Kubernetes anhand einer Auswahl von Kriterien miteinander verglichen und bewertet. Eine Distribution wird dann anhand einer airgapped Installation in Form einer virtuellen Maschine (VM) in mehrfacher Ausführung installiert. Anschließend soll innerhalb des Kubernetes jeweils ein Container mit einer Implementierung des Bundle-Protokolls gestartet und eine Verbindung zur Erde aufgebaut werden. Zudem soll ein VM-übergreifendes Cluster zwischen den verschiedenen Kubernetes-Implementationen der einzelnen VMs eingerichtet werden, welches die Kommunikation untereinander ermöglicht. Alle genannten Schritte sollen dabei deklarativ erfolgen ohne zusätzlichen Input von außerhalb. 
 
 \section{Evaluation}
 Folgende Fragen sollen anhand dieser Arbeit beantwortet und evaluiert werden: 
 
-1. Wie kann ein Kubernetes-Deployment auf einem Satelliten in einer Delay-Distribution-Net- work Umgebung realisiert werden?
+1. Wie kann die Installation und Konfiguration eines Kubernetes Clusters deklarativ auf einem Satelliten in einer Delay-Distribution-Network Umgebung mit hohen Latenzen realisiert werden?
 
-2. Wie gestaltet sich der Betrieb eines solchen Systems nach der Installation?
+2. Wie kann eine eigener Kommunikationskanal über ein Delay Tolerant Network deklarativ installiert und konfiguriert werden. 
 
-Diese Fragen sollen anschließend nach der Implementation anhand der Machbarkeit evaluiert werden. Dafür wird auf etwaige Hindernisse oder Beschränkungen eingegangen, welche sich in der Implementationsphase ergeben haben. Es können zudem Einschätzungen bezüglich dem Ressourcenverbrauch und des zeitlichen Aufwandes, sowie der Replizierbarkeit auf mehreren Satelliten auf einmal getätigt werden. 
+3. Wie kann ein Cluster mit mehreren Kubernetes-Deployments innerhalb eines Satelliten deklarativ erstellt werden? 
+
+Diese Fragen sollen nach der Implementation anhand der Machbarkeit evaluiert werden. Dafür wird auf etwaige Hindernisse oder Beschränkungen eingegangen, welche sich in der Implementationsphase ergeben haben. Es können zudem Einschätzungen bezüglich dem Ressourcenverbrauch und des zeitlichen Aufwandes, sowie der Replizierbarkeit auf mehreren Satelliten auf einmal getätigt werden. 
 
 \section{Vorläufige Gliederung}
 
 \begin{itemize}[label=\textbullet, nosep]
   \item \textbf{Einleitung}
     \begin{itemize}[label=--]
-      \item Motivation
+      \item Motivation 
+      \item Zielstellung
       \item Forschungsfragen
     \end{itemize}
 
   \item \textbf{Stand der Forschung}
     \begin{itemize}[label=--]
-      \item Kubernetes
+      \item Linux \& Kubernetes Distributionen
         \begin{itemize}[label=--]
-          \item Architektur
-          \item Anforderungen an Betrieb auf Satelliten
+          \item Talos Linux
+          \item k3OS
+          \item Element 
+          \item Flatcar Container Linux 
         \end{itemize}
     \end{itemize}
     \begin{itemize}[label=--]
-      \item Kubernetes-Distributionen
+      \item Delay Tolerant Network
         \begin{itemize}[label=--]
-          \item k3s
-          \item MicroK8s
-          \item k0s
-          \item KubeEdge
+          \item µD3TN
+          \item HDTN
+          \item ION-DTN
         \end{itemize}
-      \item Delay-Tolerant Networking
-      \begin{itemize}[label=--]
-          \item Grundprinzipien Bundel Protokoll
-          \item Relevante Protokolle und Implementierungen
-        \end{itemize}
+      \item Cluster Kommmunikation
+      % \begin{itemize}[label=--]
+      %     \item Grundprinzipien Bundel Protokoll
+      %     \item Relevante Protokolle und Implementierungen
+      %   \end{itemize}
     \end{itemize}
 
-  \item \textbf{Anforderungsanalyse}
+  \item \textbf{Anforderung \& Problemdefinition }
     \begin{itemize}[label=--]
-      \item Technische Anforderungen 
+      \item Funktionale Anforderungen
         \begin{itemize}[label=--]
-          \item Architektur
-          \item Anforderungen
+          \item Beispielszenario
+          \item Anforderungen Linux \& Kubernetes Distribution
+          \item Anforderung Bundle Protokoll Implementation
+          \item Anforderung Cluster Deployment
         \end{itemize}
     \end{itemize}
     \begin{itemize}[label=--]
-      \item Definition Lebenszyklus Szenarien 
-        \begin{itemize}[label=--]
-          \item Installation + Inbetriebnahme
-          \item Container-Deployment 
-          \item Softwareupdates in Betrieb
-        \end{itemize}
+      \item Kriterien zur Bewertung der Machbarkeit
+        % \begin{itemize}[label=--]
+        %   \item Installation + Inbetriebnahme
+        %   \item Container-Deployment 
+        %   \item Softwareupdates in Betrieb
+        % \end{itemize}
     \end{itemize}
 
   \item \textbf{Konzeption}
   \begin{itemize}[label=--]
-    \item Architekturentwurf
-    \item Betriebsmodelle 
+    \item Designentscheidungen
+    \item Architekturentwurf 
   \end{itemize}
 
   \item \textbf{Prototypische Implementierung}
     \begin{itemize}[label=--]
       \item Testumgebung
-      \item Implementierung des Integrationsansatzes
-      \item Implementation im Betrieb
+      \item Installation VM 
+      \item Installation Kubernetes
+      \item Installation DTN-Kommunikation
+      \item Installation Cluster-Kommunikation
     \end{itemize}
 
   \item \textbf{Evaluation}
@@ -179,27 +186,34 @@ Im folgenden soll die zeitliche Planung der Aufgaben eingeteilt werden. Die gesa
       \item Recherche aktuelle Produkte
     \end{itemize}
 
-  \item \textbf{Woche 3-4: Kubernetes}
+    \item \textbf{Woche 3: Definition Anforderungen}
     \begin{itemize}[label=--]
-      \item Intensive Literraturrecherche Architektur Kubernetes
-      \item Vergleichskriterien + Vergleich Distributionen
+      \item Erarbeitung funktionaler Anforderungen
+      \item Definition von Kriterien zur Machbarkeit
     \end{itemize}
 
-  \item \textbf{Woche 5-6: Definition der Anforderungen}
+  \item \textbf{Woche 4-5: Linux \& Kubernetes Distributionen}
     \begin{itemize}[label=--]
-      \item Aufstellen technischer Anforderung/ Architektur
-      \item Definition der Lebenszyklen 
+      \item Erarbeitung Vergleichskriterien
+      \item Auswahl und Erstellung eines deklarativen Installationsprozesses
+      \item Konfiguration Kubernetes
     \end{itemize}
 
-  \item \textbf{Woche 7-8: Testsystem + Implementation}
+  \item \textbf{Woche 6-7: DTN Kommunikation}
     \begin{itemize}[label=--]
-      \item Aufstellung des Testsystems 
-      \item Implementation der Lebenszyklus-Szenarien
+      \item Vergleich verschiedener Implemenationen
+      \item Erstellung eines deklarativen Installations- und Konfigurierungsprozesses
+    \end{itemize}
+
+  \item \textbf{Woche 8-9: Cluster Kommunikation}
+    \begin{itemize}[label=--]
+      \item Aufbau Cluster-interne Kommunikation
+      \item Erstellung eines deklarativen Installations- und Konfigurierungsprozesses
     \end{itemize}
   \item \textbf{Woche 9-10: Evaluation der Ergebnisse }
     \begin{itemize}[label=--]
       \item Analyse der Kriterien
-      \item Diskussion der Szenarien
+      \item Bewertung der Machbarkeit
     \end{itemize}
   \item \textbf{Woche 11: Abschluss}
     \begin{itemize}[label=--]
